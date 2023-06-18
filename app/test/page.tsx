@@ -3,10 +3,10 @@ import Link from "next/link"
 import { siteConfig } from "@/config/site"
 import { buttonVariants } from "@/components/ui/button"
 
-import { AlertDialogDemo } from "./demo"
-import { ProfileForm } from "./profile/profile-form"
+import { AlertDialogDemo } from "../demo"
+import { ProfileForm } from "../profile/profile-form"
 
-export default function IndexPage() {
+export default function TestPage() {
   return (
     <section className="container grid items-center gap-6 pb-8 pt-6 md:py-10">
       <div className="flex max-w-[980px] flex-col items-start gap-2">
@@ -34,10 +34,9 @@ export default function IndexPage() {
           href={siteConfig.links.github}
           className={buttonVariants({ variant: "outline" })}
         >
-          GitHub
+          Holo
         </Link>
         <AlertDialogDemo />
-        <ProfileForm />
       </div>
     </section>
   )
