@@ -6,13 +6,40 @@ import { buttonVariants } from "@/components/ui/button"
 import { AlertDialogDemo } from "./demo"
 import { ProfileForm } from "./profile/profile-form"
 
-export default function IndexPage() {
+async function getGitHubStars(): Promise<string | null> {
+  try {
+    const response = await fetch(
+      "https://api.github.com/repos/tonirilix/shadcn-next-test",
+      {
+        headers: {
+          Accept: "application/vnd.github+json",
+        },
+        next: {
+          revalidate: 60,
+        },
+      }
+    )
+
+    if (!response?.ok) {
+      return null
+    }
+
+    const json = await response.json()
+
+    return parseInt(json["stargazers_count"]).toLocaleString()
+  } catch (error) {
+    return null
+  }
+}
+
+export default async function IndexPage() {
+  const stars = await getGitHubStars()
   return (
     <section className="container grid items-center gap-6 pb-8 pt-6 md:py-10">
       <div className="flex max-w-[980px] flex-col items-start gap-2">
         <h1 className="text-3xl font-extrabold leading-tight tracking-tighter md:text-4xl">
           Beautifully designed components <br className="hidden sm:inline" />
-          built with Radix UI and Tailwind CSS.
+          built with Radix UI and Tailwind CSS. {stars} ⭐️
         </h1>
         <p className="max-w-[700px] text-lg text-muted-foreground">
           Accessible and customizable components that you can copy and paste

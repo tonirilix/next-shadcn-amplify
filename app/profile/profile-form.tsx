@@ -21,9 +21,34 @@ const formSchema = z.object({
   username: z.string().min(2, {
     message: "Username must be at least 2 characters.",
   }),
-  lastname: z.string().min(1),
   test: z.string().min(1),
 })
+
+async function getGitHubStars(): Promise<string | null> {
+  try {
+    const response = await fetch(
+      "https://api.github.com/repos/tonirilix/shadcn-next-test",
+      {
+        headers: {
+          Accept: "application/vnd.github+json",
+        },
+        next: {
+          revalidate: 60,
+        },
+      }
+    )
+
+    if (!response?.ok) {
+      return null
+    }
+
+    const json = await response.json()
+
+    return parseInt(json["stargazers_count"]).toLocaleString()
+  } catch (error) {
+    return null
+  }
+}
 
 export function ProfileForm() {
   // 1. Define your form.
@@ -32,7 +57,6 @@ export function ProfileForm() {
     resolver: zodResolver(formSchema),
     defaultValues: {
       username: "",
-      lastname: "",
       test: "",
     },
   })
@@ -43,7 +67,12 @@ export function ProfileForm() {
   function onSubmit(values: z.infer<typeof formSchema>) {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
+    async function load() {
+      const data = await getGitHubStars()
+      console.log({ data })
+    }
     console.log(values)
+    load()
   }
 
   return (
@@ -65,22 +94,6 @@ export function ProfileForm() {
             </FormItem>
           )}
         />
-        {userVal === "123" && (
-          <FormField
-            control={form.control}
-            name="lastname"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Username</FormLabel>
-                <FormControl>
-                  <Input placeholder="shadcn" {...field} />
-                </FormControl>
-                <FormDescription>Lastname</FormDescription>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        )}
         <FormField
           control={form.control}
           name="test"
