@@ -63,6 +63,8 @@ export default async function IndexPage() {
         >
           GitHub
         </Link>
+      </div>
+      <div className="grid gap-4 md:grid-cols-1 lg:grid-cols-2">
         <AlertDialogDemo />
         <ProfileForm />
       </div>

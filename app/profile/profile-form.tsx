@@ -17,38 +17,14 @@ import {
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 
+import { getGitHubStars } from "./profile.server"
+
 const formSchema = z.object({
   username: z.string().min(2, {
     message: "Username must be at least 2 characters.",
   }),
   test: z.string().min(1),
 })
-
-async function getGitHubStars(): Promise<string | null> {
-  try {
-    const response = await fetch(
-      "https://api.github.com/repos/tonirilix/shadcn-next-test",
-      {
-        headers: {
-          Accept: "application/vnd.github+json",
-        },
-        next: {
-          revalidate: 60,
-        },
-      }
-    )
-
-    if (!response?.ok) {
-      return null
-    }
-
-    const json = await response.json()
-
-    return parseInt(json["stargazers_count"]).toLocaleString()
-  } catch (error) {
-    return null
-  }
-}
 
 export function ProfileForm() {
   // 1. Define your form.
